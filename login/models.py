@@ -1,6 +1,8 @@
 from django.db import models
 import re
 import bcrypt
+from django.db.models.deletion import CASCADE
+from django.db.models.fields import CharField
 
 # Create your models here.
 class UserManager(models.Manager):
@@ -50,6 +52,28 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     # historico = models.IntegerField(default=0)
     objects = UserManager()
+    
+
+class Autor(models.Model):
+    nombre = models.CharField(max_length=40)
+
+
+class Libro(models.Model):
+    titulo = models.CharField(max_length=40)
+    autor = models.ForeignKey(Autor, on_delete=CASCADE, related_name="libros")
+    rating = models.IntegerField(default=0)
+
+
+class Review(models.Model):
+    usuario = models.ForeignKey(User, on_delete=CASCADE, related_name="reviewer")
+    contenido = models.TextField(default='')
+    libro = models.ForeignKey(Libro, on_delete=CASCADE, related_name="libros")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+
+
+
 
 
 
